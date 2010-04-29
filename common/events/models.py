@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.core.exceptions import ValidationError
-from media.models import Image, Video, Audio, File
+from common.media.models import Image, Video, Audio, File
 from tagging.models import Tag
 from django.conf import settings
 # UK Based at the moment
