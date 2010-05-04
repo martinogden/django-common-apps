@@ -17,7 +17,7 @@ class Image(models.Model):
   
   def __unicode__(self):
     if self.local_image:
-      return self.local_image
+      return self.local_image.name
     else:
       return self.remote_image
       
