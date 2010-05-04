@@ -105,5 +105,6 @@ class CommonEvent(models.Model):
     return self.name
     
   def save(self):
+    super(CommonEvent, self).save()
     isgd.shorten_url(self)
     super(CommonEvent, self).save()
