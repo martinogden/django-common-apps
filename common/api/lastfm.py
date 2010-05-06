@@ -1,5 +1,8 @@
 import pylast
 from django.conf import settings
+from common.media.models import Image
+from httplib import BadStatusLine
+
 class Lastfm:
   def __init__(self, performer):
     try:
@@ -33,7 +36,6 @@ class Lastfm:
         
   def artist_meta(self):  
     # Description
-    from httplib import BadStatusLine
     if self.performer.lastfm_description is None or len(self.performer.lastfm_description) < 1:
       try:
         self.performer.lastfm_description = self.artist.get_bio_summary()
@@ -54,7 +56,7 @@ class Lastfm:
     if self._has_photos("last.fm") == False:
       # Add Last.fm Images
       try:
-        i = artist.get_images(limit=1)
+        i = self.artist.get_images(limit=1)
         try:
           # Add 10 images in all sizes available
           for image in i:
@@ -62,7 +64,7 @@ class Lastfm:
             for size in image['sizes']:
               sizes.append(size)
             for size in sizes:
-              new_image = Image(url=image['sizes'][size], thirdparty_page=image['url'], size=size, content_object=self)
+              new_image = Image(remote_image=image['sizes'][size], thirdparty_page=image['url'], size=size, content_object=self.performer)
               new_image.save()
         except IndexError:
           pass
