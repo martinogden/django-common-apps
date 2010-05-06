@@ -34,7 +34,7 @@ class Lastfm:
   def artist_meta(self):  
     # Description
     from httplib import BadStatusLine
-    if self.performer.lastfm_description is None or self.performer.lastfm_description == "":
+    if self.performer.lastfm_description is None or len(self.performer.lastfm_description) < 1:
       try:
         self.performer.lastfm_description = self.artist.get_bio_summary()
       except pylast.WSError:
