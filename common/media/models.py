@@ -18,15 +18,16 @@ class Image(models.Model):
   def save(self):
     """Store image locally if we have a URL"""
     import urllib
+    import os
     from django.core.files import File
-    
+
     if self.remote_image and not self.local_image:
       result = urllib.urlretrieve(self.remote_image)
-      self.photo.save(
+      self.local_image.save(
         os.path.basename(self.remote_image),
         File(open(result[0]))
       )
-    
+
     super(Image, self).save()
     
   
