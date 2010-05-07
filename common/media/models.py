@@ -15,6 +15,21 @@ class Image(models.Model):
   created_at = models.DateTimeField(editable=False, auto_now_add=True)
   updated_at = models.DateTimeField(editable=False, auto_now=True)
   
+  def save(self):
+    """Store image locally if we have a URL"""
+    import urllib
+    from django.core.files import File
+    
+    if self.remote_image and not self.local_image:
+      result = urllib.urlretrieve(self.remote_image)
+      self.photo.save(
+        os.path.basename(self.remote_image),
+        File(open(result[0]))
+      )
+    
+    super(Image, self).save()
+    
+  
   def __unicode__(self):
     if self.local_image:
       return self.local_image.name
