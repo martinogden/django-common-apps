@@ -33,9 +33,9 @@ class Image(models.Model):
   
   def __unicode__(self):
     if self.local_image:
-      return self.local_image.name
+      return u'%s' % (self.local_image.name)
     else:
-      return self.remote_image
+      return u'%s' % (self.remote_image)
       
 class Video(models.Model):
   PROVIDER_CHOICES = (
