@@ -9,7 +9,7 @@ __author__    = "Josh Toft <josh@fwix.com>"
 __copyright__ = "Copyright 2010 Fwix, Inc."
 __license__   = "MIT"
 
-import md5
+from hashlib import md5
 import urllib
 
 import httplib2

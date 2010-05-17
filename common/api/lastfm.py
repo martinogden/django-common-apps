@@ -56,16 +56,32 @@ class Lastfm:
     if self._has_photos("last.fm") == False:
       # Add Last.fm Images
       try:
-        i = self.artist.get_images(limit=1)
+        i = self.artist.get_images(limit=5)
         try:
-          # Add 10 images in all sizes available
           for image in i:
             sizes = []
-            for size in image['sizes']:
-              sizes.append(size)
-            for size in sizes:
-              new_image = Image(remote_image=image['sizes'][size], thirdparty_page=image['url'], size=size, content_object=self.performer)
+            # Grab biggest size possible for each image
+            # Any images smaller than large will be ignored - Maybe fix, see how it works.
+            try:
+              new_image = Image(remote_image=image.sizes.extralarge, thirdparty_page=image.url, size='extralarge', content_object=self.performer)
               new_image.save()
+            except AttributeError:
+              try:
+                new_image = Image(remote_image=image.sizes.largesquare, thirdparty_page=image.url, size='largesquare', content_object=self.performer)
+                new_image.save()
+              except AttributeError:
+                try:
+                  new_image = Image(remote_image=image.sizes.large, thirdparty_page=image.url, size='large', content_object=self.performer)
+                  new_image.save()
+                except AttributeError:
+                  pass
+
+          # Old code, stopped working with AttributeError .. ?
+          # for size in image['sizes']:
+          #   sizes.append(size)
+          #   for size in sizes:
+          #     new_image = Image(remote_image=image['sizes'][size], thirdparty_page=image['url'], size=size, content_object=self.performer)
+          #     new_image.save()
         except IndexError:
           pass
       except BadStatusLine:

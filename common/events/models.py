@@ -19,8 +19,8 @@ class CommonVenue(models.Model):
   email = models.EmailField(max_length=255)
   # Needs work to validate telephone number:
   # http://www.djangosnippets.org/snippets/1207/ Looks useable
-  telephone = models.CharField(max_length=16)
-  website = models.URLField(max_length=255)
+  telephone = models.CharField(max_length=16, blank=True, null=True)
+  website = models.URLField(max_length=255, blank=True, null=True)
   images = generic.GenericRelation(Image)
   latitude = models.FloatField(editable=False, blank=True, null=True)
   longitude = models.FloatField(editable=False, blank=True, null=True)
