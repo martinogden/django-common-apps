@@ -51,7 +51,7 @@ class Video(models.Model):
   updated_at = models.DateTimeField(editable=False, auto_now=True)
   
   def __unicode__(self):
-    return self.url # TODO: REGEX videos and resize effectively, and abstact sizes to settings.py
+    return u'%s' % (self.url) # TODO: REGEX videos and resize effectively, and abstact sizes to settings.py
   
 class Audio(models.Model):
   PROVIDER_CHOICES = (
@@ -66,7 +66,7 @@ class Audio(models.Model):
   updated_at = models.DateTimeField(editable=False, auto_now=True)
 
   def __unicode__(self):
-    return self.embed
+    return u'%s' % (self.embed)
     
 class File(models.Model):
   path = models.FileField(upload_to="uploads/%Y/%m/%d/", max_length=255)
@@ -77,4 +77,4 @@ class File(models.Model):
   updated_at = models.DateTimeField(editable=False, auto_now=True)
 
   def __unicode__(self):
-    return self.path
+    return u'%s' % (self.path)
