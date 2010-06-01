@@ -3,6 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.core.exceptions import ValidationError
 from django.conf import settings
+from django.utils.safestring import SafeUnicode
 
 class Image(models.Model):
   local_image = models.ImageField(upload_to="uploads/%Y/%m/%d/", height_field="height", width_field="width", max_length=255, null=True, blank=True)
@@ -35,9 +36,9 @@ class Image(models.Model):
   
   def __unicode__(self):
     if self.local_image:
-      return u'%s' % (self.local_image.name)
+      return SafeUnicode('%s' % (self.local_image.name))
     else:
-      return u'%s' % (self.remote_image)
+      return SafeUnicode('%s' % (self.remote_image))
       
 class Video(models.Model):
   PROVIDER_CHOICES = (
@@ -69,10 +70,10 @@ class Video(models.Model):
   def __unicode__(self):
     if self.provider == "vimeo.com":
       video_id = self.url.split("/")[-1]
-      return u'<object width="%s" height="%s"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=%s&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=%s&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="%s" height="%s"></embed></object>' % (settings.VIDEO_WIDTH, settings.VIDEO_HEIGHT, video_id, video_id, settings.VIDEO_WIDTH, settings.VIDEO_HEIGHT)
+      return SafeUnicode('<object width="%s" height="%s"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=%s&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=%s&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="%s" height="%s"></embed></object>' % (settings.VIDEO_WIDTH, settings.VIDEO_HEIGHT, video_id, video_id, settings.VIDEO_WIDTH, settings.VIDEO_HEIGHT))
     elif self.provider == "youtube.com":
       video_id = self.url.split("v=")[-1]
-      return u'<object width="%s" height="%s"><param name="movie" value="http://www.youtube.com/v/%s&hl=en_US&fs=1&"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/%s&hl=en_US&fs=1&" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="%s" height="%s"></embed></object>' % (settings.VIDEO_WIDTH, settings.VIDEO_HEIGHT, video_id, video_id, settings.VIDEO_WIDTH, settings.VIDEO_HEIGHT)
+      return SafeUnicode('<object width="%s" height="%s"><param name="movie" value="http://www.youtube.com/v/%s&hl=en_US&fs=1&"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/%s&hl=en_US&fs=1&" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="%s" height="%s"></embed></object>' % (settings.VIDEO_WIDTH, settings.VIDEO_HEIGHT, video_id, video_id, settings.VIDEO_WIDTH, settings.VIDEO_HEIGHT))
       
 class Audio(models.Model):
   PROVIDER_CHOICES = (
@@ -100,7 +101,7 @@ class Audio(models.Model):
     
   def __unicode__(self):
     if self.provider == "soundcloud.com":
-      return u'<object width="%s" height="%s"><param name="movie" value="http://player.soundcloud.com/player.swf?url=%s&&color=0066cc"></param><param name="allowscriptaccess" value="always"></param><embed allowscriptaccess="always" src="http://player.soundcloud.com/player.swf?url=%s&&color=0066cc" type="application/x-shockwave-flash" width="%s" height="%s"></embed></object>' % (settings.SOUNDCLOUD_WIDTH, settings.SOUNDCLOUD_HEIGHT, self.url, self.url, settings.SOUNDCLOUD_WIDTH, settings.SOUNDCLOUD_HEIGHT)
+      return SafeUnicode('<object width="%s" height="%s"><param name="movie" value="http://player.soundcloud.com/player.swf?url=%s&&color=0066cc"></param><param name="allowscriptaccess" value="always"></param><embed allowscriptaccess="always" src="http://player.soundcloud.com/player.swf?url=%s&&color=0066cc" type="application/x-shockwave-flash" width="%s" height="%s"></embed></object>' % (settings.SOUNDCLOUD_WIDTH, settings.SOUNDCLOUD_HEIGHT, self.url, self.url, settings.SOUNDCLOUD_WIDTH, settings.SOUNDCLOUD_HEIGHT))
     
 class File(models.Model):
   path = models.FileField(upload_to="uploads/%Y/%m/%d/", max_length=255)
