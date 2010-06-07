@@ -97,7 +97,7 @@ class Audio(models.Model):
   def save(self):
     if self.embed.find("soundcloud.com"):
       self.provider = "soundcloud.com"
-    super(Audio. self).save()
+    super(Audio, self).save()
     
   def __unicode__(self):
     if self.provider == "soundcloud.com":
