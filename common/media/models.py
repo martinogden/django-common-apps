@@ -79,7 +79,7 @@ class Audio(models.Model):
   PROVIDER_CHOICES = (
     ('soundcloud', 'soundcloud.com'),
   )
-  link = models.URLField(help_text="Add link here, NOT embed code.", max_length=255)
+  embed = models.TextField(help_text="Add link here, NOT embed code.", max_length=255)
   provider = models.TextField(editable=False, max_length=10, choices=PROVIDER_CHOICES)
   content_type = models.ForeignKey(ContentType)
   object_id = models.PositiveIntegerField()
@@ -91,18 +91,20 @@ class Audio(models.Model):
     verbose_name_plural = "Audio"
   def clean(self):
     # Only allow for Youtube or Vimeo
-    if self.url.find("soundcloud.com") is -1:
+    if self.embed.find("soundcloud.com") is -1:
       raise ValidationError(u'Audio must be from Soundcloud')
       
   def save(self):
-    if self.link.find("soundcloud.com"):
+    if self.embed.find("soundcloud.com"):
       self.provider = "soundcloud.com"
     super(Audio. self).save()
     
   def __unicode__(self):
     if self.provider == "soundcloud.com":
-      return SafeUnicode('<object width="%s" height="%s"><param name="movie" value="http://player.soundcloud.com/player.swf?url=%s&&color=0066cc"></param><param name="allowscriptaccess" value="always"></param><embed allowscriptaccess="always" src="http://player.soundcloud.com/player.swf?url=%s&&color=0066cc" type="application/x-shockwave-flash" width="%s" height="%s"></embed></object>' % (settings.SOUNDCLOUD_WIDTH, settings.SOUNDCLOUD_HEIGHT, self.url, self.url, settings.SOUNDCLOUD_WIDTH, settings.SOUNDCLOUD_HEIGHT))
-    
+      # Seems links are quite hard to extract from soundcloud share button etc.
+      # return SafeUnicode('<object width="%s" height="%s"><param name="movie" value="http://player.soundcloud.com/player.swf?url=%s&&color=0066cc"></param><param name="allowscriptaccess" value="always"></param><embed allowscriptaccess="always" src="http://player.soundcloud.com/player.swf?url=%s&&color=0066cc" type="application/x-shockwave-flash" width="%s" height="%s"></embed></object>' % (settings.SOUNDCLOUD_WIDTH, settings.SOUNDCLOUD_HEIGHT, self.url, self.url, settings.SOUNDCLOUD_WIDTH, settings.SOUNDCLOUD_HEIGHT))
+      return SafeUnicode(self.embed)
+      
 class File(models.Model):
   path = models.FileField(upload_to="uploads/%Y/%m/%d/", max_length=255)
   content_type = models.ForeignKey(ContentType)
