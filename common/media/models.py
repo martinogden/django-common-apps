@@ -95,7 +95,7 @@ class Audio(models.Model):
       raise ValidationError(u'Audio must be from Soundcloud')
       
   def save(self):
-    if self.url.find("soundcloud.com"):
+    if self.link.find("soundcloud.com"):
       self.provider = "soundcloud.com"
     super(Audio. self).save()
     
