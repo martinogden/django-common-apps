@@ -60,20 +60,25 @@ class Video(models.Model):
       
   def save(self):
     # Decide which provider video is from:
-    if self.url.find("youtube.com"):
+    if self.url.find("youtube.com") > 0:
       self.provider = "youtube.com"
-    elif self.url.find("vimeo.com"):
+    if self.url.find("vimeo.com") > 0:
       self.provider = "vimeo.com"
       
     super(Video, self).save()
     
-  def __unicode__(self):
+  def __unicode__(self, width=False, height=False):
+    if not width:
+      width = settings.VIDEO_WIDTH
+    if not height:
+      height = settings.VIDEO_HEIGHT
+      
     if self.provider == "vimeo.com":
       video_id = self.url.split("/")[-1]
-      return SafeUnicode('<object width="%s" height="%s"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=%s&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=%s&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="%s" height="%s"></embed></object>' % (settings.VIDEO_WIDTH, settings.VIDEO_HEIGHT, video_id, video_id, settings.VIDEO_WIDTH, settings.VIDEO_HEIGHT))
+      return SafeUnicode('<object width="%s" height="%s"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=%s&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=%s&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="%s" height="%s"></embed></object>' % (width, height, video_id, video_id, width, height))
     elif self.provider == "youtube.com":
       video_id = self.url.split("v=")[-1]
-      return SafeUnicode('<object width="%s" height="%s"><param name="movie" value="http://www.youtube.com/v/%s&hl=en_US&fs=1&"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/%s&hl=en_US&fs=1&" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="%s" height="%s"></embed></object>' % (settings.VIDEO_WIDTH, settings.VIDEO_HEIGHT, video_id, video_id, settings.VIDEO_WIDTH, settings.VIDEO_HEIGHT))
+      return SafeUnicode('<object width="%s" height="%s"><param name="movie" value="http://www.youtube.com/v/%s&hl=en_US&fs=1&"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/%s&hl=en_US&fs=1&" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="%s" height="%s"></embed></object>' % (width, height, video_id, video_id, width, height))
       
 class Audio(models.Model):
   PROVIDER_CHOICES = (
