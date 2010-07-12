@@ -40,7 +40,7 @@ class CommonVenue(models.Model):
     super(CommonVenue, self).save()
     
 class CommonPerformer(models.Model):
-  name = models.CharField(max_length=255)
+  name = models.CharField(max_length=255, unique=True)
   slug = models.SlugField(max_length=255, editable=False, null=True, blank=True)
   description = models.TextField(null=True, blank=True)
   email = models.EmailField(max_length=255, null=True, blank=True)
@@ -75,8 +75,8 @@ class CommonPerformer(models.Model):
     super(CommonPerformer, self).save()
 
 class CommonEvent(models.Model):
+  name = models.CharField(max_length=65, null=True, blank=True, unique=True)
   slug = models.SlugField(max_length=255, editable=False, null=True, blank=True)
-  name = models.CharField(max_length=65, null=True, blank=True)
   description = models.TextField(null=True, blank=True)
   link = models.URLField(null=True, blank=True)
   # DateTime breaking Admin....?
