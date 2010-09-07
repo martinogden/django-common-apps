@@ -18,7 +18,7 @@ class Image(models.Model):
   created_at = models.DateTimeField(editable=False, auto_now_add=True)
   updated_at = models.DateTimeField(editable=False, auto_now=True)
   
-  def save(self):
+  def save(self, *args, **kwargs):
     """Store image locally if we have a URL"""
     import urllib
     import os
@@ -31,8 +31,7 @@ class Image(models.Model):
         File(open(result[0]))
       )
 
-    super(Image, self).save()
-    
+    super(Image, self).save(*args, **kwargs)
   
   def __unicode__(self):
     if self.local_image:
@@ -58,14 +57,14 @@ class Video(models.Model):
     if self.url.find("youtube.com") is -1 and self.url.find("vimeo.com") is -1:
       raise ValidationError(u'Video must be from either Vimeo or Youtube')
       
-  def save(self):
+  def save(self, *args, **kwargs):
     # Decide which provider video is from:
     if self.url.find("youtube.com") > 0:
       self.provider = "youtube.com"
     if self.url.find("vimeo.com") > 0:
       self.provider = "vimeo.com"
       
-    super(Video, self).save()
+    super(Video, self).save(*args, **kwargs)
     
   def __unicode__(self, width=False, height=False):
     if not width:
@@ -84,7 +83,7 @@ class Audio(models.Model):
   PROVIDER_CHOICES = (
     ('soundcloud', 'soundcloud.com'),
   )
-  embed = models.TextField(help_text="Add link here, NOT embed code.", max_length=255)
+  embed = models.URLField(help_text="Add link here, NOT embed code.", max_length=255, verbose_name="Audio URL")
   provider = models.TextField(editable=False, max_length=10, choices=PROVIDER_CHOICES)
   content_type = models.ForeignKey(ContentType)
   object_id = models.PositiveIntegerField()
@@ -99,10 +98,10 @@ class Audio(models.Model):
     if self.embed.find("soundcloud.com") is -1:
       raise ValidationError(u'Audio must be from Soundcloud')
       
-  def save(self):
+  def save(self, *args, **kwargs):
     if self.embed.find("soundcloud.com"):
       self.provider = "soundcloud.com"
-    super(Audio, self).save()
+    super(Audio, self).save(*args, **kwargs)
     
   def __unicode__(self):
     if self.provider == "soundcloud.com":

@@ -35,7 +35,7 @@ class CommonVenue(models.Model):
   def __unicode__(self):
     return self.name
       
-  def save(self):
+  def save(self, *args, **kwargs):
     google.geolocate(self)
     super(CommonVenue, self).save()
     
@@ -70,7 +70,7 @@ class CommonPerformer(models.Model):
   def __unicode__(self):
     return self.name
     
-  def save(self):
+  def save(self, *args, **kwargs):
     self.add_slug()
     super(CommonPerformer, self).save()
 
@@ -104,7 +104,7 @@ class CommonEvent(models.Model):
   def __unicode__(self):
     return self.name
     
-  def save(self):
+  def save(self, *args, **kwargs):
     super(CommonEvent, self).save()
     isgd.shorten_url(self)
     super(CommonEvent, self).save()
