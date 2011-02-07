@@ -78,7 +78,15 @@ class Video(models.Model):
     elif self.provider == "youtube.com":
       video_id = self.url.split("v=")[-1]
       return SafeUnicode('<object width="%s" height="%s"><param name="movie" value="http://www.youtube.com/v/%s&hl=en_US&fs=1&"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/%s&hl=en_US&fs=1&" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="%s" height="%s"></embed></object>' % (width, height, video_id, video_id, width, height))
-      
+     
+  @property 
+  def video_id(self):
+    if self.provider == "vimeo.com":
+      return self.url.split("/")[-1]
+    elif self.provider == "youtube.com":
+      return self.url.split("v=")[-1]
+
+
 class Audio(models.Model):
   PROVIDER_CHOICES = (
     ('soundcloud', 'soundcloud.com'),
