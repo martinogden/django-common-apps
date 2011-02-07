@@ -15,3 +15,27 @@ def video(pk, width, height):
     return video.__unicode__(width, height)
   else:
     return video
+
+
+class VideoEmbedNode(template.Node):
+    def __init__(self, video, width, height):
+        self.video, self.width, self.height = video, width, height
+
+    def render(self, context):
+        return self.video.__unicode__(self.width, self.height)
+
+
+@register.tag
+def embed(parser, token):
+    bits = token.contents.split()
+    if len(bits) != 3:
+        raise TemplateSyntaxError, "embed tag takes exactly two arguments"
+    
+    try:
+      width, height = bits[2].split("x")
+    except ValueError:
+      raise TemplateSyntaxError, "video_embed tag must be in format {% video_tag [width]x[height] %}"
+    
+    
+    return VideoEmbedNode(video, width, height)
+
