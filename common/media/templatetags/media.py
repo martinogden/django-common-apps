@@ -29,13 +29,12 @@ class VideoEmbedNode(template.Node):
 def embed(parser, token):
     bits = token.contents.split()
     if len(bits) != 3:
-        raise TemplateSyntaxError, "embed tag takes exactly two arguments"
+        raise template.TemplateSyntaxError, "embed tag takes exactly two arguments"
     
     try:
       width, height = bits[2].split("x")
     except ValueError:
-      raise TemplateSyntaxError, "video_embed tag must be in format {% video_tag [width]x[height] %}"
+      raise template.TemplateSyntaxError, "video_embed tag must be in format {% video_tag [width]x[height] %}"
     
     
     return VideoEmbedNode(video, width, height)
-
