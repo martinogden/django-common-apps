@@ -18,7 +18,7 @@ def fullsplit(path, result=None):
     return fullsplit(head, [tail] + result)
 
 
-package_dir = "basic"
+package_dir = "common"
 
 
 packages = []
